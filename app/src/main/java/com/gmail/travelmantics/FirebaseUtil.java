@@ -19,9 +19,9 @@ public class FirebaseUtil {
         if(firebaseUtil == null){
             firebaseUtil = new FirebaseUtil();
             mFirebaseDatabase = FirebaseDatabase.getInstance();
-            mDeals = new ArrayList<TravelDeal>();
         }
-
+            //moving mDeals ArrayList instantiation out of the if blocked solved the duplication problem
+        mDeals = new ArrayList<TravelDeal>();
         mDatabaseReference = mFirebaseDatabase.getReference().child(ref);
     }
 }

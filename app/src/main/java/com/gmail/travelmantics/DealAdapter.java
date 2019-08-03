@@ -64,9 +64,6 @@ public class DealAdapter extends RecyclerView.Adapter<DealAdapter.DealViewHolder
             }
         };
 
-        deals.clear(); //Clears the array list before populating it again with existing data from db
-                      //Solves the duplication problem.
-
         mDatabaseReference.addChildEventListener(mChildEventListener);
     }
 
