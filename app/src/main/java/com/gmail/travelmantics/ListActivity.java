@@ -30,7 +30,8 @@ public class ListActivity extends AppCompatActivity {
         RecyclerView rvDeals = (RecyclerView) findViewById(R.id.rvDeals);
         final DealAdapter adapter = new DealAdapter();
         rvDeals.setAdapter(adapter);
-        LinearLayoutManager dealsLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager dealsLayoutManager =
+                new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         rvDeals.setLayoutManager(dealsLayoutManager);
     }
 

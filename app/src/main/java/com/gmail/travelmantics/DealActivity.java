@@ -1,5 +1,6 @@
  package com.gmail.travelmantics;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,8 +20,9 @@ import com.google.firebase.database.FirebaseDatabase;
      EditText txtTitle;
      EditText txtDescription;
      EditText txtPrice;
+     TravelDeal deal;
 
-    @Override
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_insert);
@@ -31,6 +33,16 @@ import com.google.firebase.database.FirebaseDatabase;
         txtTitle = (EditText) findViewById(R.id.txtTitle);
         txtDescription = (EditText) findViewById(R.id.txtDescription);
         txtPrice = (EditText) findViewById(R.id.txtPrice);
+        Intent intent = getIntent();
+        TravelDeal deal = (TravelDeal) intent.getSerializableExtra("Deal");
+        if (deal == null){
+            deal = new TravelDeal();
+        }
+
+        this.deal = deal;
+        txtTitle.setText(deal.getTitle());
+        txtDescription.setText(deal.getDescription());
+        txtPrice.setText(deal.getPrice());
     }
 
      @Override
