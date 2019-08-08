@@ -3,6 +3,7 @@
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.data.model.Resource;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -131,10 +133,7 @@ import com.squareup.picasso.Picasso;
                          }
                      });
 
-
-                     /*String url = taskSnapshot.getStorage().getDownloadUrl().toString();
-                     deal.setImageUrl(url);
-                     showImage(url);*/
+                        deal.setImageName(taskSnapshot.getStorage().getPath());
                  }
              });
          }
@@ -165,6 +164,21 @@ import com.squareup.picasso.Picasso;
          }
             //Delete deal
          mDatabaseReference.child(deal.getId()).removeValue();
+         if (deal.getImageName() != null && deal.getImageName().isEmpty() == false){
+             StorageReference picRef = FirebaseUtil.mStorage.getReference().child(deal.getImageName());
+             picRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                 @Override
+                 public void onSuccess(Void aVoid) {
+                    Log.d("Delete Image","Image Successfully Deleted");
+                 }
+             }).addOnFailureListener(new OnFailureListener() {
+                 @Override
+                 public void onFailure(@NonNull Exception e) {
+
+                     Log.d("Delete Image",e.getMessage());
+                 }
+             });
+         }
      }
 
      private void backToList() {
