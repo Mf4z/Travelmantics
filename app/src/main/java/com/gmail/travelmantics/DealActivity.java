@@ -110,27 +110,19 @@ import com.google.firebase.storage.UploadTask;
          return true;
      }
 
-
-     /*@Override
-     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-         super.onActivityResult(requestCode, resultCode, data);
-         if (requestCode == PICTURE_RESULT && requestCode == RESULT_OK){
-             Uri imageUri = data.getData();
-             final StorageReference ref = FirebaseUtil.mStorageRef.child(imageUri.getLastPathSegment());
-             ref.putFile(imageUri);
-
-
-         }
-     }*/
-
-
      @Override
-     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+     protected void onActivityResult(int requestCode, int resultCode, @Nullable final Intent data) {
          super.onActivityResult(requestCode, resultCode, data);
          if (requestCode ==  PICTURE_RESULT && resultCode == RESULT_OK){
              Uri imageUri = data.getData();
              StorageReference ref = FirebaseUtil.mStorageRef.child(imageUri.getLastPathSegment());
-             ref.putFile(imageUri);
+             ref.putFile(imageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                 @Override
+                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                     String url = taskSnapshot.getStorage().getDownloadUrl().toString();
+                     deal.setImageUrl(url);
+                 }
+             });
          }
      }
 
