@@ -1,6 +1,7 @@
  package com.gmail.travelmantics;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +16,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.data.model.Resource;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
  public class DealActivity extends AppCompatActivity {
 
@@ -55,6 +58,7 @@ import com.google.firebase.storage.UploadTask;
         txtTitle.setText(deal.getTitle());
         txtDescription.setText(deal.getDescription());
         txtPrice.setText(deal.getPrice());
+        showImage(deal.getImageUrl());
         Button btnImage = (Button) findViewById(R.id.btnImage);
         btnImage.setOnClickListener(new View.OnClickListener() {
              @Override
@@ -115,12 +119,22 @@ import com.google.firebase.storage.UploadTask;
          super.onActivityResult(requestCode, resultCode, data);
          if (requestCode ==  PICTURE_RESULT && resultCode == RESULT_OK){
              Uri imageUri = data.getData();
-             StorageReference ref = FirebaseUtil.mStorageRef.child(imageUri.getLastPathSegment());
+             final StorageReference ref = FirebaseUtil.mStorageRef.child(imageUri.getLastPathSegment());
              ref.putFile(imageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
                  @Override
                  public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                     String url = taskSnapshot.getStorage().getDownloadUrl().toString();
+                     ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                         @Override
+                         public void onSuccess(Uri uri) {
+                             deal.setImageUrl(uri.toString());
+                             showImage(deal.getImageUrl());
+                         }
+                     });
+
+
+                     /*String url = taskSnapshot.getStorage().getDownloadUrl().toString();
                      deal.setImageUrl(url);
+                     showImage(url);*/
                  }
              });
          }
@@ -173,4 +187,16 @@ import com.google.firebase.storage.UploadTask;
          txtPrice.setEnabled(isEnabled);
      }
 
+
+     private void showImage(String url){
+         if (url != null && url.isEmpty() == false) {
+
+             int width = Resources.getSystem().getDisplayMetrics().widthPixels;
+             Picasso.get()
+                     .load(url)
+                     .resize(width,width*2/3)
+                     .centerCrop()
+                     .into(imageView);
+         }
+     }
  }
