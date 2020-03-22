@@ -7,4 +7,4 @@ An app that uses Firebase real time database to create,read,update and delete tr
 - Firebase Realtime Storage
 
 ## License
-[MIT License](../LICENSE.md)
+[MIT License](./LICENSE.md)
